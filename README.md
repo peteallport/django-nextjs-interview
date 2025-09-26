@@ -2,11 +2,36 @@
 
 ![Project Screenshot](client/public/project-screenshot.png)
 
-👋 **Welcome, Upside team!**
+> 👋 **Welcome, Upside team!**
+>
+> Thank you for taking the time to review my takehome assignment! I enjoyed building this interactive activity timeline and minimap, and I hope the implementation and documentation make my approach clear. Please let me know if you have any questions. I'm excited to discuss my work and learn more about Upside!
+>
+> Happy reviewing!
 
-Thank you for taking the time to review my takehome assignment! I enjoyed building this interactive activity timeline and minimap, and I hope the implementation and documentation make my approach clear. Please let me know if you have any questions. I'm excited to discuss my work and learn more about Upside!
+## Quick Start
 
-Happy reviewing!
+```bash
+# Option 1: Use the setup script
+chmod +x load_data.sh
+./load_data.sh
+
+# Option 2: Manual setup
+
+# Backend setup
+cd server
+pip3 install -r requirements.txt
+python3 manage.py migrate
+python3 manage.py ingest_persons data/persons.jsonl
+python3 manage.py ingest_activityevents data/account_31crr1tcp2bmcv1fk6pcm0k6ag.jsonl
+python3 manage.py runserver
+
+# Frontend setup (in new terminal)
+cd client
+npm install
+npm run dev
+```
+
+Visit http://localhost:3000 to view the application.
 
 ## Implementation Summary (2 Hours)
 
@@ -132,28 +157,3 @@ Successfully built a full-stack activity timeline application with:
 - Dark mode support
 - Select a range in `ActivityMinimap.tsx`
 - Additional data formatting (e.g. numerical commas, data formating)
-
-## Quick Start
-
-```bash
-# Option 1: Use the setup script
-chmod +x load_data.sh
-./load_data.sh
-
-# Option 2: Manual setup
-
-# Backend setup
-cd server
-pip3 install -r requirements.txt
-python3 manage.py migrate
-python3 manage.py ingest_persons data/persons.jsonl
-python3 manage.py ingest_activityevents data/account_31crr1tcp2bmcv1fk6pcm0k6ag.jsonl
-python3 manage.py runserver
-
-# Frontend setup (in new terminal)
-cd client
-npm install
-npm run dev
-```
-
-Visit http://localhost:3000 to view the application.
