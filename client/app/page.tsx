@@ -112,44 +112,49 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto p-6">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Activity Timeline
-          </h1>
-          <p className="mt-2 text-gray-600">
-            Showing {activities.length} of {totalCount} total activities
-          </p>
+    <div className="h-full flex flex-col bg-gray-50">
+      {/* Scrollable content area */}
+      <main className="flex-1 overflow-y-auto">
+        <div className="max-w-7xl mx-auto p-6">
+          {/* Header */}
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold text-gray-900">
+              Activity Timeline
+            </h1>
+            <p className="mt-2 text-gray-600">
+              Showing {activities.length} of {totalCount} total activities
+            </p>
+          </div>
+
+          {/* Minimap */}
+          <ActivityMinimap
+            dailyCounts={dailyCounts}
+            firstTouchpoints={firstTouchpoints}
+            visibleRange={visibleRange}
+            onDateClick={handleDateClick}
+          />
+
+          {/* Activity Table */}
+          <ActivityTable
+            activities={activities}
+            onLoadMore={loadMoreActivities}
+            hasMore={hasMore}
+            loading={loadingMore}
+            onVisibleRangeChange={handleVisibleRangeChange}
+            scrollToDate={scrollToDate}
+          />
         </div>
+      </main>
 
-        {/* Minimap */}
-        <ActivityMinimap
-          dailyCounts={dailyCounts}
-          firstTouchpoints={firstTouchpoints}
-          visibleRange={visibleRange}
-          onDateClick={handleDateClick}
-        />
-
-        {/* Activity Table */}
-        <ActivityTable
-          activities={activities}
-          onLoadMore={loadMoreActivities}
-          hasMore={hasMore}
-          loading={loadingMore}
-          onVisibleRangeChange={handleVisibleRangeChange}
-          scrollToDate={scrollToDate}
-        />
-
-        {/* Footer */}
-        <div className="mt-6 text-center text-sm text-gray-500">
+      {/* Fixed Footer */}
+      <footer className="bg-white border-t border-gray-200 py-4">
+        <div className="max-w-7xl mx-auto px-6 text-center text-sm text-gray-500">
           <p>
             © {new Date().getFullYear()} Activity Timeline - Upside Take-Home
             Assignment
           </p>
         </div>
-      </div>
-    </main>
+      </footer>
+    </div>
   );
 }

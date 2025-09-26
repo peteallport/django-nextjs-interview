@@ -22,8 +22,7 @@ export const ActivityTable: React.FC<ActivityTableProps> = ({
   onVisibleRangeChange,
   scrollToDate,
 }) => {
-  const [hoveredPersonId, setHoveredPersonId] = useState<string | null>(null);
-  const tableRef = useRef<HTMLDivElement>(null);
+  const [hoveredPersonKey, setHoveredPersonKey] = useState<string | null>(null);
   const rowRefs = useRef<{ [key: string]: HTMLTableRowElement | null }>({});
   const { ref: loadMoreRef, inView } = useInView({
     threshold: 0,
@@ -31,7 +30,7 @@ export const ActivityTable: React.FC<ActivityTableProps> = ({
 
   // Track visible date range
   useEffect(() => {
-    if (!tableRef.current || activities.length === 0) return;
+    if (activities.length === 0) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -57,7 +56,7 @@ export const ActivityTable: React.FC<ActivityTableProps> = ({
         }
       },
       {
-        root: tableRef.current,
+        root: null, // Use viewport instead of table container
         rootMargin: "0px",
         threshold: 0,
       }
@@ -126,12 +125,9 @@ export const ActivityTable: React.FC<ActivityTableProps> = ({
   };
 
   return (
-    <div
-      ref={tableRef}
-      className="w-full h-[600px] overflow-auto border border-gray-200 rounded-lg"
-    >
+    <div className="w-full border border-gray-200 rounded-lg mb-8">
       <table className="w-full">
-        <thead className="sticky top-0 bg-white z-10 border-b border-gray-200">
+        <thead className="bg-white border-b border-gray-200">
           <tr>
             <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">
               Date
@@ -207,11 +203,16 @@ export const ActivityTable: React.FC<ActivityTableProps> = ({
                         <span
                           key={person.id}
                           className="relative inline-flex items-center px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded cursor-pointer hover:bg-blue-200"
-                          onMouseEnter={() => setHoveredPersonId(person.id)}
-                          onMouseLeave={() => setHoveredPersonId(null)}
+                          onMouseEnter={() =>
+                            setHoveredPersonKey(
+                              `${activity.touchpoint_id}-${person.id}`
+                            )
+                          }
+                          onMouseLeave={() => setHoveredPersonKey(null)}
                         >
                           {person.first_name} {person.last_name}
-                          {hoveredPersonId === person.id && (
+                          {hoveredPersonKey ===
+                            `${activity.touchpoint_id}-${person.id}` && (
                             <div className="absolute bottom-full left-0 mb-1 z-20">
                               <div className="bg-gray-900 text-white text-xs rounded px-2 py-1 whitespace-nowrap">
                                 {person.email_address}
