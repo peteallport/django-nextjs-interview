@@ -1,4 +1,8 @@
-import { AllActivityData, ActivityEvent } from "@/types/activity";
+import {
+  ActivityEvent,
+  DailyActivityCount,
+  FirstTouchpoint,
+} from "@/types/activity";
 
 const API_BASE_URL = "http://localhost:8000/api";
 
@@ -21,22 +25,6 @@ function buildUrl(endpoint: string, params: Record<string, any>): string {
 
 export const api = {
   /**
-   * Fetch all activity data including activities, daily counts, and first touchpoints
-   */
-  async getAllActivityData(): Promise<AllActivityData> {
-    const url = buildUrl("/activities/all-data/", {
-      customer_org_id: DEFAULT_CUSTOMER_ORG_ID,
-      account_id: DEFAULT_ACCOUNT_ID,
-    });
-
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return response.json();
-  },
-
-  /**
    * Fetch paginated activities
    */
   async getActivities(
@@ -53,6 +41,38 @@ export const api = {
       account_id: DEFAULT_ACCOUNT_ID,
       page,
       page_size: pageSize,
+    });
+
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  },
+
+  /**
+   * Fetch daily activity counts for the minimap
+   */
+  async getDailyCounts(): Promise<DailyActivityCount[]> {
+    const url = buildUrl("/activities/daily-counts/", {
+      customer_org_id: DEFAULT_CUSTOMER_ORG_ID,
+      account_id: DEFAULT_ACCOUNT_ID,
+    });
+
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  },
+
+  /**
+   * Fetch first touchpoints for the minimap
+   */
+  async getFirstTouchpoints(): Promise<FirstTouchpoint[]> {
+    const url = buildUrl("/activities/first-touchpoints/", {
+      customer_org_id: DEFAULT_CUSTOMER_ORG_ID,
+      account_id: DEFAULT_ACCOUNT_ID,
     });
 
     const response = await fetch(url);

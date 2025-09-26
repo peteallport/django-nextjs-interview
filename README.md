@@ -11,7 +11,7 @@ Happy reviewing!
 Successfully built a full-stack activity timeline application with:
 
 - ✅ **Django REST API** with paginated endpoints and aggregations
-- ✅ **Infinite scroll table** displaying 1500+ activity events
+- ✅ **Progressive loading** with true infinite scroll (100 items per page)
 - ✅ **Interactive minimap** with line chart showing daily IN activities
 - ✅ **First touchpoint markers** for each person
 - ✅ **Click-to-navigate** from minimap to table
@@ -19,6 +19,7 @@ Successfully built a full-stack activity timeline application with:
 - ✅ **Clean, modern UI** with TailwindCSS styling
 - ✅ **Tooltips** showing email on person hover
 - ✅ **Date gap indicators** in the timeline
+- ✅ **Optimized loading** - minimap data loads in parallel with first page
 
 ## Implementation Approach
 
@@ -106,10 +107,11 @@ Successfully built a full-stack activity timeline application with:
 
 ## Trade-offs Made
 
-- **Pre-loading data**: For speed of development, initially loading larger chunks
 - **Component library**: Using pre-built Recharts vs custom D3 implementation
 - **State management**: Using React hooks vs Redux for simplicity in 2-hour window
 - **HTTP client**: Using native fetch API instead of axios to reduce dependencies
+- **Error handling**: Basic error logging vs comprehensive error boundaries
+- **Caching**: No caching layer for API responses in this MVP
 
 ## Quick Start
 

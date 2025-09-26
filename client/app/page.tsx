@@ -19,7 +19,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const [currentPage, setCurrentPage] = useState(0); // Start at 0 since we'll load page 1 first
+  const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [visibleRange, setVisibleRange] = useState<{
     start: Date | null;
@@ -32,22 +32,26 @@ export default function Home() {
     const loadInitialData = async () => {
       try {
         setLoading(true);
-        // Load all data for the minimap and initial activities
-        const data = await api.getAllActivityData();
-        setActivities(data.activities);
-        setDailyCounts(data.daily_counts);
-        setFirstTouchpoints(data.first_touchpoints);
-        setTotalCount(data.total_count);
 
-        // Since all-data returns first 500 items, calculate what page we're on
-        const itemsPerPage = 100;
-        const loadedPages = Math.ceil(data.activities.length / itemsPerPage);
-        setCurrentPage(loadedPages);
+        // Load all data in parallel
+        const [activitiesData, dailyCountsData, firstTouchpointsData] =
+          await Promise.all([
+            api.getActivities(1, 100),
+            api.getDailyCounts(),
+            api.getFirstTouchpoints(),
+          ]);
 
-        // Only set hasMore if there are more items beyond what we loaded
-        setHasMore(data.activities.length < data.total_count);
+        // Set activities from first page
+        setActivities(activitiesData.results);
+        setTotalCount(activitiesData.count);
+        setHasMore(activitiesData.next !== null);
+        setCurrentPage(1);
+
+        // Set minimap data
+        setDailyCounts(dailyCountsData);
+        setFirstTouchpoints(firstTouchpointsData);
       } catch (error) {
-        console.error("Failed to load activity data:", error);
+        console.error("Failed to load initial data:", error);
       } finally {
         setLoading(false);
       }

@@ -112,110 +112,116 @@ export const ActivityMinimap: React.FC<ActivityMinimapProps> = ({
   const visibleRangeCoords = getVisibleRangeCoords();
 
   return (
-    <div className="w-full h-80 p-4 bg-white border border-gray-200 rounded-lg mb-4">
-      <h3 className="text-lg font-semibold mb-2">Activity Timeline</h3>
-      <ResponsiveContainer width="100%" height={200}>
-        <LineChart
-          data={chartData}
-          margin={{ top: 10, right: 30, left: 50, bottom: 50 }}
-          onClick={handleChartClick}
-          className="cursor-pointer"
-        >
-          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-          <XAxis
-            dataKey="date"
-            tickFormatter={formatXAxisTick}
-            stroke="#6b7280"
-            fontSize={11}
-            angle={-45}
-            textAnchor="end"
-            height={50}
-          />
-          <YAxis
-            stroke="#6b7280"
-            fontSize={11}
-            tick={{ fontSize: 10 }}
-            label={{
-              value: "Activities",
-              angle: -90,
-              position: "insideLeft",
-              style: { textAnchor: "middle", fontSize: 12 },
-              offset: 10,
-            }}
-          />
-          <Tooltip content={<CustomTooltip />} />
+    <div className="w-full bg-white border border-gray-200 rounded-lg mb-4">
+      <div className="px-4 pt-4 pb-2">
+        <h3 className="text-lg font-semibold">Activity Timeline</h3>
+      </div>
+      <div className="px-2">
+        <ResponsiveContainer width="100%" height={220}>
+          <LineChart
+            data={chartData}
+            margin={{ top: 10, right: 10, left: 40, bottom: 50 }}
+            onClick={handleChartClick}
+            className="cursor-pointer"
+          >
+            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+            <XAxis
+              dataKey="date"
+              tickFormatter={formatXAxisTick}
+              stroke="#6b7280"
+              fontSize={11}
+              angle={-45}
+              textAnchor="end"
+              height={50}
+            />
+            <YAxis
+              stroke="#6b7280"
+              fontSize={11}
+              tick={{ fontSize: 10 }}
+              label={{
+                value: "Activities",
+                angle: -90,
+                position: "insideLeft",
+                style: { textAnchor: "middle", fontSize: 12 },
+                offset: 10,
+              }}
+            />
+            <Tooltip content={<CustomTooltip />} />
 
-          {/* Line chart */}
-          <Line
-            type="monotone"
-            dataKey="count"
-            stroke="#3b82f6"
-            strokeWidth={2}
-            dot={false}
-            activeDot={{ r: 6 }}
-          />
-
-          {/* Visible range indicators (blue vertical bars) */}
-          {visibleRangeCoords && (
-            <>
-              <ReferenceArea
-                x1={visibleRangeCoords.x1}
-                x2={visibleRangeCoords.x2}
-                fill="#3b82f6"
-                fillOpacity={0.1}
-                stroke="#3b82f6"
-                strokeOpacity={0.5}
-              />
-              {/* Left bar */}
-              <ReferenceDot
-                x={visibleRangeCoords.x1}
-                y={0}
-                r={0}
-                stroke="#3b82f6"
-                strokeWidth={2}
-                fill="transparent"
-              />
-              {/* Right bar */}
-              <ReferenceDot
-                x={visibleRangeCoords.x2}
-                y={0}
-                r={0}
-                stroke="#3b82f6"
-                strokeWidth={2}
-                fill="transparent"
-              />
-            </>
-          )}
-
-          {/* First touchpoint markers */}
-          {firstTouchpoints.map((tp) => (
-            <ReferenceDot
-              key={tp.person_id}
-              x={tp.date}
-              y={dailyCounts.find((d) => d.date === tp.date)?.count || 0}
-              r={5}
-              fill="#ef4444"
-              stroke="#fff"
+            {/* Line chart */}
+            <Line
+              type="monotone"
+              dataKey="count"
+              stroke="#3b82f6"
               strokeWidth={2}
-            >
-              <title>{`${tp.person_name} - First touchpoint`}</title>
-            </ReferenceDot>
-          ))}
-        </LineChart>
-      </ResponsiveContainer>
+              dot={false}
+              activeDot={{ r: 6 }}
+            />
 
-      <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-4 text-xs text-gray-600">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-blue-500 rounded-sm"></div>
-          <span>Daily IN Activities</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-          <span>First Touchpoint</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-3 bg-blue-500 opacity-20 border border-blue-500"></div>
-          <span>Visible Range</span>
+            {/* Visible range indicators (blue vertical bars) */}
+            {visibleRangeCoords && (
+              <>
+                <ReferenceArea
+                  x1={visibleRangeCoords.x1}
+                  x2={visibleRangeCoords.x2}
+                  fill="#3b82f6"
+                  fillOpacity={0.1}
+                  stroke="#3b82f6"
+                  strokeOpacity={0.5}
+                />
+                {/* Left bar */}
+                <ReferenceDot
+                  x={visibleRangeCoords.x1}
+                  y={0}
+                  r={0}
+                  stroke="#3b82f6"
+                  strokeWidth={2}
+                  fill="transparent"
+                />
+                {/* Right bar */}
+                <ReferenceDot
+                  x={visibleRangeCoords.x2}
+                  y={0}
+                  r={0}
+                  stroke="#3b82f6"
+                  strokeWidth={2}
+                  fill="transparent"
+                />
+              </>
+            )}
+
+            {/* First touchpoint markers */}
+            {firstTouchpoints.map((tp) => (
+              <ReferenceDot
+                key={tp.person_id}
+                x={tp.date}
+                y={dailyCounts.find((d) => d.date === tp.date)?.count || 0}
+                r={5}
+                fill="#ef4444"
+                stroke="#fff"
+                strokeWidth={2}
+              >
+                <title>{`${tp.person_name} - First touchpoint`}</title>
+              </ReferenceDot>
+            ))}
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+
+      <div className="px-4 pb-4">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-gray-600">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-blue-500 rounded-sm"></div>
+            <span>Daily IN Activities</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+            <span>First Touchpoint</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-3 bg-blue-500 opacity-20 border border-blue-500"></div>
+            <span>Visible Range</span>
+          </div>
         </div>
       </div>
     </div>
