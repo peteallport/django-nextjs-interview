@@ -40,5 +40,3 @@ export interface AllActivityData {
   first_touchpoints: FirstTouchpoint[];
   total_count: number;
 }
-
-
