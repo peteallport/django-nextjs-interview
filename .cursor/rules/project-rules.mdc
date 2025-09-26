@@ -1,0 +1,20 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+## Details
+
+This is a takehome assignment. I have two hours to complete it. Reference `CANDIDATE_INSTRUCTIONS.md` for the requirements and details about the assignment.
+
+## Stack
+
+- Django / Python backend (reference `server/requirements.txt` as needed)
+- Next.js / TypeScript / TailwindCSS frontend (reference `client/package.json`, `client/next.config.ts` as needed)
+
+## Additional Details
+
+- The comapny this is for is Upside (https://www.upside.tech/)
+- I should aim to divide my time into something like ~20 mins of initial planning, ~40 mins of locked in development, and the remaining hour on polish and final improvments.
+- While working, I will document my progress in the `README.md` with succinct thoughts for the team to reference when they review this.
