@@ -3,6 +3,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { ActivityTable } from "@/components/ActivityTable";
 import { ActivityMinimap } from "@/components/ActivityMinimap";
+import {
+  ActivityTableSkeleton,
+  MinimapSkeleton,
+} from "@/components/LoadingSkeleton";
+import { ErrorMessage } from "@/components/ErrorMessage";
 import { api } from "@/services/api";
 import {
   ActivityEvent,
@@ -26,6 +31,7 @@ export default function Home() {
     end: Date | null;
   }>({ start: null, end: null });
   const [scrollToDate, setScrollToDate] = useState<Date | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Initial load - get minimap data and first page of activities
   useEffect(() => {
@@ -52,6 +58,9 @@ export default function Home() {
         setFirstTouchpoints(firstTouchpointsData);
       } catch (error) {
         console.error("Failed to load initial data:", error);
+        setError(
+          "Failed to load activity data. Please check your connection and try again."
+        );
       } finally {
         setLoading(false);
       }
@@ -100,13 +109,47 @@ export default function Home() {
     setTimeout(() => setScrollToDate(null), 100);
   }, []);
 
+  const handleRetry = useCallback(() => {
+    setError(null);
+    setLoading(true);
+    window.location.reload();
+  }, []);
+
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          <p className="mt-4 text-gray-600">Loading activity data...</p>
-        </div>
+      <div className="h-full flex flex-col bg-gray-50">
+        <main className="flex-1 overflow-y-auto">
+          <div className="max-w-7xl mx-auto p-6">
+            {/* Header */}
+            <div className="mb-6">
+              <h1 className="text-3xl font-bold text-gray-900">
+                Activity Timeline
+              </h1>
+              <p className="mt-2 text-gray-600">Loading activity data...</p>
+            </div>
+
+            {/* Skeleton Components */}
+            <MinimapSkeleton />
+            <ActivityTableSkeleton />
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="h-full flex flex-col bg-gray-50">
+        <main className="flex-1 overflow-y-auto">
+          <div className="max-w-7xl mx-auto p-6">
+            <div className="mb-6">
+              <h1 className="text-3xl font-bold text-gray-900">
+                Activity Timeline
+              </h1>
+            </div>
+            <ErrorMessage message={error} onRetry={handleRetry} />
+          </div>
+        </main>
       </div>
     );
   }

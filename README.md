@@ -20,6 +20,7 @@ Successfully built a full-stack activity timeline application with:
 - ✅ **Tooltips** showing email on person hover
 - ✅ **Date gap indicators** in the timeline
 - ✅ **Optimized loading** - minimap data loads in parallel with first page
+- ✅ **Interactive chart points** with pointer cursor for better UX
 
 ## Implementation Approach
 
@@ -94,6 +95,14 @@ Successfully built a full-stack activity timeline application with:
 - ✅ Smooth scrolling animations
 - ✅ Clean, modern UI with TailwindCSS
 - ✅ Loading states and error handling
+- ✅ Added pointer cursor to interactive chart elements
+
+## Last-Minute Improvements (Final Minutes)
+
+- ✅ **Fixed all TypeScript linter errors** for cleaner code
+- ✅ **Added loading skeletons** for better perceived performance
+- ✅ **Enhanced error handling** with retry functionality
+- ✅ **Performance optimization** with debounced scroll handlers
 
 ## TODOs / Future Improvements
 
@@ -104,6 +113,8 @@ Successfully built a full-stack activity timeline application with:
 - **Real-time**: WebSocket updates for new activities
 - **Testing**: Unit tests for critical paths
 - **Accessibility**: ARIA labels and keyboard navigation
+- **Analytics**: Track user interactions and usage patterns
+- **Mobile**: Responsive design optimizations for mobile devices
 
 ## Trade-offs Made
 

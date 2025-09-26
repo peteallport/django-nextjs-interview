@@ -38,6 +38,7 @@ export const ActivityMinimap: React.FC<ActivityMinimapProps> = ({
     timestamp: parseISO(item.date).getTime(),
   }));
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChartClick = (data: any) => {
     if (data && data.activePayload && data.activePayload[0]) {
       const dateStr = data.activePayload[0].payload.date;
@@ -52,6 +53,7 @@ export const ActivityMinimap: React.FC<ActivityMinimapProps> = ({
   };
 
   // Custom tooltip
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload[0]) {
       const date = parseISO(label);
@@ -155,7 +157,7 @@ export const ActivityMinimap: React.FC<ActivityMinimapProps> = ({
               stroke="#3b82f6"
               strokeWidth={2}
               dot={false}
-              activeDot={{ r: 6 }}
+              activeDot={{ r: 6, cursor: "pointer" }}
             />
 
             {/* Visible range indicators (blue vertical bars) */}
@@ -200,6 +202,7 @@ export const ActivityMinimap: React.FC<ActivityMinimapProps> = ({
                 fill="#ef4444"
                 stroke="#fff"
                 strokeWidth={2}
+                style={{ cursor: "pointer" }}
               >
                 <title>{`${tp.person_name} - First touchpoint`}</title>
               </ReferenceDot>
@@ -208,18 +211,18 @@ export const ActivityMinimap: React.FC<ActivityMinimapProps> = ({
         </ResponsiveContainer>
       </div>
 
-      <div className="px-4 pb-4">
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-gray-600">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-blue-500 rounded-sm"></div>
+      <div className="px-4 pb-3">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500">
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-0.5 bg-blue-500"></div>
             <span>Daily IN Activities</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-2.5 h-2.5 bg-red-500 rounded-full border border-white"></div>
             <span>First Touchpoint</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-3 bg-blue-500 opacity-20 border border-blue-500"></div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-6 h-2.5 bg-blue-500 opacity-20 border-l-2 border-r-2 border-blue-500"></div>
             <span>Visible Range</span>
           </div>
         </div>

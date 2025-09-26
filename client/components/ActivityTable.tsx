@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import { useInView } from "react-intersection-observer";
 import { format, differenceInDays, parseISO } from "date-fns";
 import { ActivityEvent } from "@/types/activity";
+import { debounce } from "@/utils/debounce";
 
 interface ActivityTableProps {
   activities: ActivityEvent[];
@@ -27,6 +28,13 @@ export const ActivityTable: React.FC<ActivityTableProps> = ({
   const { ref: loadMoreRef, inView } = useInView({
     threshold: 0,
   });
+
+  // Debounced version of the visible range change callback
+  const debouncedOnVisibleRangeChange = useMemo(
+    () =>
+      onVisibleRangeChange ? debounce(onVisibleRangeChange, 150) : undefined,
+    [onVisibleRangeChange]
+  );
 
   // Track visible date range
   useEffect(() => {
@@ -52,7 +60,7 @@ export const ActivityTable: React.FC<ActivityTableProps> = ({
           const dates = visibleActivities.map((a) => parseISO(a.timestamp));
           const minDate = new Date(Math.min(...dates.map((d) => d.getTime())));
           const maxDate = new Date(Math.max(...dates.map((d) => d.getTime())));
-          onVisibleRangeChange?.(minDate, maxDate);
+          debouncedOnVisibleRangeChange?.(minDate, maxDate);
         }
       },
       {
@@ -73,7 +81,7 @@ export const ActivityTable: React.FC<ActivityTableProps> = ({
     return () => {
       observer.disconnect();
     };
-  }, [activities, onVisibleRangeChange]);
+  }, [activities, debouncedOnVisibleRangeChange]);
 
   // Handle scroll to date
   useEffect(() => {
@@ -94,7 +102,8 @@ export const ActivityTable: React.FC<ActivityTableProps> = ({
     });
 
     if (closestActivity) {
-      const row = rowRefs.current[closestActivity.touchpoint_id];
+      const row =
+        rowRefs.current[(closestActivity as ActivityEvent).touchpoint_id];
       if (row) {
         row.scrollIntoView({ behavior: "smooth", block: "center" });
       }
@@ -125,12 +134,12 @@ export const ActivityTable: React.FC<ActivityTableProps> = ({
   };
 
   return (
-    <div className="w-full border border-gray-200 rounded-lg mb-8">
+    <div className="w-full border border-gray-200 rounded-lg mb-8 overflow-hidden">
       <table className="w-full">
-        <thead className="bg-white border-b border-gray-200">
+        <thead className="bg-gray-50 border-b border-gray-200">
           <tr>
-            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">
-              Date
+            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 min-w-[180px]">
+              Date & Time
             </th>
             <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">
               Activity
@@ -177,19 +186,21 @@ export const ActivityTable: React.FC<ActivityTableProps> = ({
                     rowRefs.current[activity.touchpoint_id] = el;
                   }}
                   data-activity-id={activity.touchpoint_id}
-                  className="hover:bg-gray-50"
+                  className={`${
+                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                  } hover:bg-gray-100 transition-colors`}
                 >
-                  <td className="px-4 py-3 text-sm text-gray-900">
-                    <div>
+                  <td className="px-4 py-3 text-sm text-gray-900 whitespace-nowrap">
+                    <div className="space-y-1">
                       <div className="font-medium">
                         {format(activityDate, "MMM dd, yyyy")}
                       </div>
-                      <div className="text-gray-500">
-                        {format(activityDate, "HH:mm")}
+                      <div className="text-gray-500 text-xs">
+                        {format(activityDate, "h:mm a")} local
                       </div>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-900">
+                  <td className="px-4 py-3 text-sm text-gray-900 font-semibold">
                     <div
                       className="max-w-md truncate"
                       title={activity.activity}
@@ -197,7 +208,7 @@ export const ActivityTable: React.FC<ActivityTableProps> = ({
                       {activity.activity}
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-900">
+                  <td className="px-4 py-3 text-sm text-gray-900 font-semibold">
                     <div className="flex flex-wrap gap-1">
                       {activity.people_details.map((person) => (
                         <span
@@ -235,7 +246,7 @@ export const ActivityTable: React.FC<ActivityTableProps> = ({
                   </td>
                   <td className="px-4 py-3 text-sm text-gray-900">
                     <span
-                      className={`inline-flex items-center px-2 py-1 text-xs rounded ${
+                      className={`inline-flex font-mono capitalize lowercase items-center px-2 py-1 text-xs rounded ${
                         activity.status === "OPENED"
                           ? "bg-green-100 text-green-800"
                           : activity.status === "CLICKED"
@@ -246,7 +257,7 @@ export const ActivityTable: React.FC<ActivityTableProps> = ({
                       {activity.status}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-900">
+                  <td className="px-4 py-3 text-sm text-gray-900 ">
                     {formatTeams(activity.involved_team_ids)}
                   </td>
                 </tr>
@@ -257,7 +268,10 @@ export const ActivityTable: React.FC<ActivityTableProps> = ({
       </table>
 
       {/* Load more trigger */}
-      <div ref={loadMoreRef} className="h-10 flex items-center justify-center">
+      <div
+        ref={loadMoreRef}
+        className="h-12 flex items-center justify-center bg-gray-50 border-t border-gray-200"
+      >
         {loading && (
           <div className="text-sm text-gray-500">
             Loading more activities...
