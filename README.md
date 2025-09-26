@@ -1,5 +1,7 @@
 # Activity Timeline with Interactive Minimap
 
+![Project Screenshot](client/public/project-screenshot.png)
+
 👋 **Welcome, Upside team!**
 
 Thank you for taking the time to review my takehome assignment! I enjoyed building this interactive activity timeline and minimap, and I hope the implementation and documentation make my approach clear. Please let me know if you have any questions. I'm excited to discuss my work and learn more about Upside!
@@ -123,6 +125,13 @@ Successfully built a full-stack activity timeline application with:
 - **HTTP client**: Using native fetch API instead of axios to reduce dependencies
 - **Error handling**: Basic error logging vs comprehensive error boundaries
 - **Caching**: No caching layer for API responses in this MVP
+
+## Immedaite Additional Improvements
+
+- Mobile responsiveness
+- Dark mode support
+- Select a range in `ActivityMinimap.tsx`
+- Additional data formatting (e.g. numerical commas, data formating)
 
 ## Quick Start
 
